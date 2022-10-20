@@ -5,7 +5,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 
-export default function Uploader({setFiles, setUploadDetails, setRandomClicked, setRecipes, setImages_bs64}){
+export default function Uploader({setFiles, setUploadDetails, setRandomClicked, setRandomClickedDiv,setRecipes, setImages_bs64}){
     // Styling for 
   const thumb = {
     display: 'inline-flex',
@@ -70,7 +70,8 @@ export default function Uploader({setFiles, setUploadDetails, setRandomClicked, 
 
     let formData = new FormData();
     document.getElementById('prevTerm').innerText = '';
-    setRandomClicked(false);
+    setRandomClicked(true);
+    setRandomClickedDiv(5);
 
 
 
