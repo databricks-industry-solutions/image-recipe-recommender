@@ -1,8 +1,10 @@
-import React, { useCallback, useMemo, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Accordion from 'react-bootstrap/Accordion';
 import { jsPDF } from "jspdf";
 import Uploader from './Uploader.js'
+import Alert from 'react-bootstrap/Alert';
+
 
 
 export default function App() {
@@ -24,37 +26,100 @@ export default function App() {
   //A function to clean borders of randomly selected images
   const cleanBorders = () => {
 
-    const imageDivs = ['0', '1', '2', '3', '4'];
+    const imageDivs = ['0', '1', '2', '3', '4','5'];
     imageDivs.map(
-      x =>document.getElementById(x).style.border = 'none'
+      x => document.getElementById(x).style.border = 'none'
     );
-  
+
   }
-  
+
+  function is_numeric(str){
+    return /^\d+$/.test(str);
+}
+
   //Function to generate recipe pdf for each recipe recommended by the recommendation engine
   const generatePdf = (index, recipes, images_bs64) => {
     const doc = new jsPDF();
-    doc.text(20, 20, 'Retrieved by the Databricks AI Recipe Finder');
-  
-    doc.text(20, 30, `Recipe: ${recipes[index].Title}`);
-    doc.setFontSize(14);
-  
+    doc.text(15, 20, 'Retrieved by the Databricks AI Recipe Finder');
+
+    doc.text(15, 30, `Recipe: ${recipes[index].Title}`);
+    doc.setFontSize(11);
+
     const imgData = `data:image/jpeg;base64,${images_bs64[index]}`;
-    const splitIngredients = doc.splitTextToSize(eval(`new Array(${recipes[index].Cleaned_Ingredients.replace(/^\[|\]$/g, '')})`).join(' ,'), 180);
-    doc.text(20, 110, 'Ingredients:');
-    doc.addImage(imgData, 'JPEG', 20, 40)
-  
-    doc.text(20, 120, splitIngredients);
-    doc.text(20, 280, 'Please turn over/scroll for instructions')
+    //const splitIngredients = doc.splitTextToSize(eval(`new Array(${recipes[index].Cleaned_Ingredients.replace(/^\[|\]$/g, '')})`).join(' ,'), 180);
+    const splitIngredients = eval(`new Array(${recipes[index].Cleaned_Ingredients.replace(/^\[|\]$/g, '')})`);
+    
+    doc.text(15, 110, 'Ingredients:');
+    doc.addImage(imgData, 'JPEG', 15, 40)
+    //split ingredient list on commas 
+
+    let yloc = 120;
+
+    for (let i=0; i<splitIngredients.length; i++)
+    {
+      doc.text(15, yloc, splitIngredients[i]);
+      yloc += 5;
+    }
+    doc.text(15, 280, 'Please turn over/scroll for instructions')
     doc.addPage();
-  
-    const splitInstructions = doc.splitTextToSize(recipes[index].Instructions, 180);
-    doc.text(20, 30, 'Instructions:');
-    doc.text(20, 40, splitInstructions);
+
+    //const splitInstructions = doc.splitTextToSize(recipes[index].Instructions, 180);
+    //console.log(splitInstructions);
+    doc.text(15, 30, 'Instructions:');
+    const InstructionsArray = recipes[index].Instructions.split(".");
+    //console.log(InstructionsArray);
+    let splitInstructions = [];
+    for (let i=0; i<InstructionsArray.length;i++)
+    {
+      splitInstructions[i] = doc.splitTextToSize(InstructionsArray[i], 170);
+
+    }
+    const flattenedInstructions = splitInstructions.flat(1);
+
+    //Do something to have the solo number elements concatted to the next item
+    //Remove leading closing parentheses
+    let pos = 0;
+    let cleanedInstructions = []
+
+    for (let i=0; i<flattenedInstructions.length; i++)
+    {
+      if (is_numeric(flattenedInstructions[i].trim())) {
+        if (i!==0){
+        cleanedInstructions[pos] = " "
+        pos = pos + 1
+        }
+        cleanedInstructions[pos] = ' Step ' + flattenedInstructions[i] + ': ' + flattenedInstructions[i+1];
+        i = i+1;
+        pos = pos + 1;
+
+      } 
+      else { 
+        cleanedInstructions[pos] = flattenedInstructions[i];
+        pos = pos + 1;
+      }
+      
+    }
+    yloc = 40;
+
+
+    for (let i=0; i<cleanedInstructions.length; i++)
+    {
+      if (i%50===0 && i!==0){
+        yloc = 40;
+        doc.addPage();
+      }
+      doc.text(15, yloc, cleanedInstructions[i]);
+      yloc += 4;
+      
+    }
+    //Do something to have the solo number elements concatted to the next item
+    //Remove leading closing parentheses
+
+    //doc.text(20, 40, splitInstructions);
     doc.save(`${recipes[index].Title} Recipe.pdf`);
-  
+
   }
-  
+
   //Function to assign text input to a state variable and trigger the clear borders around any clicked images
   const setInput = () => {
     setTextInput(document.getElementById("input").value);
@@ -70,19 +135,19 @@ export default function App() {
     setRecipes(JSON.parse(data.result).predictions.recipes);
     setImages_bs64(JSON.parse(data.result).predictions.images_bs64);
   }
-  
+
   //Function to retrieve Recipes via an API call to the FastAPI service which in turn calls the Databricks Serverless Serving endpoint which serves the CLIP model and FAISS index
   const loadRecipes = (index) => {
-  
+
     fetch('http://127.0.0.1:8000/random_image_index/' + randomize_results[5][index]).then(res => res.json()).then(data => {
       assignImagesRecipes(data);
     });
-  
+
     setRandomClicked(true);
     setRandomClickedDiv(index);
     setUploadDetails('');
     document.getElementById('prevTerm').innerText = '';
-  
+
   }
 
   React.useEffect(() => {
@@ -130,7 +195,9 @@ export default function App() {
   useEffect(() => {
     if (randomClicked === true) {
       cleanBorders();
-      document.getElementById(randomClickedDiv).style.border = '2px solid #1B3139';
+      document.getElementById(randomClickedDiv).style.border = '2px solid #1B3139 ';
+      document.getElementById(randomClickedDiv).style.borderRadius = '10px';
+
 
     }
     else {
@@ -143,21 +210,34 @@ export default function App() {
     //Render the UI
 
     <div className="App">
-      
+
 
       <div class="p-4 ml-2">
         <img class="p-2 ml-1" src={require("./header.png")} alt={"App logo"} />
 
-        <p class="my-1 p-0">Please upload your own image or click on one of the randomly selected images from below </p>
+        <Alert variant='secondary'>
+        <p>
+        Welcome to the Databricks Holiday Recipe Finder app.  
+          The purpose of this application is to demonstrate how AI-capabilities can be easily integrated with a user interface leveraging Databricks model serving capabilities.  
+          Databricks model serving, also known as the Databricks Serverless Real-Time Interface, allows developers and data scientists to deploy machine learning models to a scalable, 
+          easy to manage microservices layer accessible via a REST API.  This functionality is intended to make the operationalization of machine learning models easier, allowing 
+          organizations to deliver new experiences and capabilities to their customers.
+        </p>
+        <hr />
+        <p>
+        With this particular application, you can search the Epicurious Food Ingredients and Recipes dataset using either image-based or text-based semantic search. 
+          Click on any of the randomly selected images to find recipes associated with similar images or upload an image of your own.  
+          Use the search box below the images to perform a separate search based on keywords and phrases.
+        </p>
+      </Alert>
+
+        <p class="mt-3 mb-1 p-0">Please upload your own image or click on one of the randomly selected images from below </p>
 
         <div>
 
           <div class="row mt-2">
-            <div class=" mb-2">
-              {/*Randomized images to click */}
-              <button onClick={clickRandomize} aria-controls="example-collapse-text" aria-expanded='false' class="btn btn-dark btn-sm float-start" >Randomize</button>
-            </div>
-              {/*These are images */}
+
+            {/*These are images */}
             <div id='0' class="col-md-2 col-xs-2 thumb">
               <a class="thumbnail" href="#">
                 {randomize_results[0] && <img class="img-responsive float rounded my-1" onClick={() => loadRecipes(0)} src={`data:image/jpeg;base64,${randomize_results[0]}`} alt="" height="200" width="100%" />}
@@ -188,16 +268,22 @@ export default function App() {
               </a>
             </div>
 
-            <div class="col-md-2 col-xs-2 thumb float-start" data-bs-toggle="tooltip" title="Image Size Limit: 5 MB">
+            <div id='5' class="col-md-2 col-xs-2 thumb float-start" data-bs-toggle="tooltip" title="Image Size Limit: 5 MB">
 
-             <Uploader setFiles={setFiles} setUploadDetails={setUploadDetails} setRandomClicked={setRandomClicked} setRecipes={setRecipes} setImages_bs64={setImages_bs64} />
+              <Uploader setFiles={setFiles} setUploadDetails={setUploadDetails} setRandomClicked={setRandomClicked}  setRandomClickedDiv={setRandomClickedDiv} setRecipes={setRecipes} setImages_bs64={setImages_bs64} />
 
 
             </div>
-            {<div class="m-2  text-wrap"><small> {UploadDetails}</small></div>}
+            {/*<div class="m-2  text-wrap"><small> {UploadDetails}</small></div>*/}
 
           </div>
+
+          <div class="my-2">
+              {/*Randomized images to click */}
+              <button onClick={clickRandomize} aria-controls="example-collapse-text" aria-expanded='false' class="btn btn-dark btn-sm float-start" >Randomize</button>
+            </div>
           <div>
+            <br/>
 
 
             <div class="input-group my-3 " >
@@ -225,7 +311,7 @@ export default function App() {
 
                     </div>
                   </div>
-              {/* Render the images  recommended */}
+                  {/* Render the images  recommended */}
 
 
                   <div class="float-start m-2 col-8" >
