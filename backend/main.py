@@ -44,7 +44,7 @@ def create_tf_serving_json(data):
 def score_model(dataset_pd):
   
   # assign url and headers
-  url = 'https://adb-2704554918254528.8.azuredatabricks.net/model-endpoint/recipe_model/8/invocations'
+  url = '<workspace URL>/<model endpoint URL from MLFlow>'
   headers = {'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'}
   
   # assemble payload as expected by webservice
