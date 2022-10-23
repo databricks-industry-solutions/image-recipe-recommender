@@ -28,7 +28,8 @@ ___
 
 | library                                | description             | license    | source                                              |
 |----------------------------------------|-------------------------|------------|-----------------------------------------------------|
-| PyYAML                                 | Reading Yaml files      | MIT        | https://github.com/yaml/pyyaml                      |
+|sentence-transformers | Provides an easy method to compute dense vector representations for sentences, paragraphs, and images | Apache 2.0| https://pypi.org/project/sentence-transformers/      |
+| kaggle| Official API for https://www.kaggle.com, accessible using a command line tool implemented in Python | Apache 2.0 | https://pypi.org/project/kaggle/|
 
 To run this accelerator, clone this repo into a Databricks workspace. Attach the RUNME notebook to any cluster running a DBR 11.0 or later runtime, and execute the notebook via Run-All. A multi-step-job describing the accelerator pipeline will be created, and the link will be provided. Execute the multi-step-job to see how the pipeline runs.
 
