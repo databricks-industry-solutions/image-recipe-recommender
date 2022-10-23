@@ -20,7 +20,7 @@ ___
 ___
 
 
-<img src=https://brysmiwasb.blob.core.windows.net/demos/images/recipes_simplearch.png width=400>
+<img src=https://brysmiwasb.blob.core.windows.net/demos/images/recipes_simplearch.png width=600>
 
 ___
 
