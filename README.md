@@ -4,7 +4,8 @@
 [![CLOUD](https://img.shields.io/badge/CLOUD-ALL-blue?logo=googlecloud&style=for-the-badge)](https://cloud.google.com/databricks)
 [![POC](https://img.shields.io/badge/POC-10_days-green?style=for-the-badge)](https://databricks.com/try-databricks)
 
-*Developers are increasingly looking to integrate Machine Learning and AI capabilities into their applications. With this application, our goal is to illustrate how developers from very different disciplines can collaborate to bring forward some exciting functionality for their shared users. Using a publicly available dataset and pre-trained models, we deploy our data and model assets behind an easy to consumer REST API.
+*
+Developers are increasingly looking to integrate Machine Learning and AI capabilities into their applications. With this application, our goal is to illustrate how developers from very different disciplines can collaborate to bring forward some exciting functionality for their shared users. Using a publicly available dataset and pre-trained models, we deploy our data and model assets behind an easy to consumer REST API.
 
 As illustrated in the architectural diagram below, the application consists of a simple React JavaScript UI coupled to a model deployed through Databricks model serving. The UI code is available in the following repo folders:
 
@@ -12,8 +13,8 @@ As illustrated in the architectural diagram below, the application consists of a
 * **backend**: the sample images used to populate the random samples displayed in the UI
 
 The Databricks components are available as three notebooks in the **model_and_data_prep** folder.  These notebooks process the images and recipe data associated with the application and package these assets with the model for deployment to Databricks model serving.
-
-</p>*
+*
+</p>
 
 ___
 <john.doe@databricks.com>
