@@ -5,7 +5,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 
-export default function Uploader({setFiles, setUploadDetails, setRandomClicked, setRandomClickedDiv,setRecipes, setImages_bs64}){
+export default function Uploader({setFiles, setUploadDetails, setRandomClicked, setRandomClickedDiv,setRecipes, setImages_bs64, url}){
     // Styling for 
   const thumb = {
     display: 'inline-flex',
@@ -77,7 +77,7 @@ export default function Uploader({setFiles, setUploadDetails, setRandomClicked, 
 
 
     formData.append('file', acceptedFiles[0])
-    fetch('http://127.0.0.1:8000/file_url/uploadfile/',
+    fetch(url+ '/file_url/uploadfile/',
       {
         method: 'POST',
         body: formData
@@ -85,6 +85,7 @@ export default function Uploader({setFiles, setUploadDetails, setRandomClicked, 
     ).then(res => res.json()).then(data => {
       setRecipes(JSON.parse(data.result).predictions.recipes);
       setImages_bs64(JSON.parse(data.result).predictions.images_bs64);
+
 
     });
 
