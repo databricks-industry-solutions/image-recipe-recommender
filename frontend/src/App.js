@@ -22,6 +22,7 @@ export default function App() {
   //Tracking the randominzed clicked div
   const [randomClickedDiv, setRandomClickedDiv] = useState({});
 
+  const backend_url = <your-backend-URL>;
 
   //A function to clean borders of randomly selected images
   const cleanBorders = () => {
@@ -48,57 +49,57 @@ export default function App() {
     const imgData = `data:image/jpeg;base64,${images_bs64[index]}`;
     //const splitIngredients = doc.splitTextToSize(eval(`new Array(${recipes[index].Cleaned_Ingredients.replace(/^\[|\]$/g, '')})`).join(' ,'), 180);
     const splitIngredients = eval(`new Array(${recipes[index].Cleaned_Ingredients.replace(/^\[|\]$/g, '')})`);
+
+    //
+    let truncatedIngredients = [];
+    for (let i=0; i<splitIngredients.length;i++)
+    {
+      truncatedIngredients[i] = doc.splitTextToSize(splitIngredients[i], 170);
+
+    }
+    //Ingredients ready to be rendered
+    const renderIngredients = truncatedIngredients.flat(1);
+
+    //
     
-    doc.text(15, 110, 'Ingredients:');
+    doc.text(15, 90, 'Ingredients:');
     doc.addImage(imgData, 'JPEG', 15, 40)
     //split ingredient list on commas 
 
-    let yloc = 120;
+    let yloc = 100;
 
-    for (let i=0; i<splitIngredients.length; i++)
+    for (let i=0; i<renderIngredients.length; i++)
     {
-      doc.text(15, yloc, splitIngredients[i]);
+      doc.text(15, yloc, renderIngredients[i]);
       yloc += 5;
     }
-    doc.text(15, 280, 'Please turn over/scroll for instructions')
     doc.addPage();
 
     //const splitInstructions = doc.splitTextToSize(recipes[index].Instructions, 180);
     //console.log(splitInstructions);
     doc.text(15, 30, 'Instructions:');
-    const InstructionsArray = recipes[index].Instructions.split(".");
-    //console.log(InstructionsArray);
+    //Split on new lines
+    const InstructionsArray = recipes[index].Instructions.split("\\n");
+
+    //Add a space between each linebreak as rendered in the pdf
+    let spacedInstructions = [];
+    let spaced_pos = 0;
+    for (let i=0; i< InstructionsArray.length; i++){
+      spacedInstructions[spaced_pos] = InstructionsArray[i];
+      spaced_pos = ++spaced_pos;
+      spacedInstructions[spaced_pos] = ' ';
+      spaced_pos = ++spaced_pos;
+    }
+    
+
     let splitInstructions = [];
-    for (let i=0; i<InstructionsArray.length;i++)
+    for (let i=0; i<spacedInstructions.length;i++)
     {
-      splitInstructions[i] = doc.splitTextToSize(InstructionsArray[i], 170);
+      splitInstructions[i] = doc.splitTextToSize(spacedInstructions[i], 170);
 
     }
-    const flattenedInstructions = splitInstructions.flat(1);
+    const cleanedInstructions = splitInstructions.flat(1);
 
-    //Do something to have the solo number elements concatted to the next item
-    //Remove leading closing parentheses
-    let pos = 0;
-    let cleanedInstructions = []
-
-    for (let i=0; i<flattenedInstructions.length; i++)
-    {
-      if (is_numeric(flattenedInstructions[i].trim())) {
-        if (i!==0){
-        cleanedInstructions[pos] = " "
-        pos = pos + 1
-        }
-        cleanedInstructions[pos] = ' Step ' + flattenedInstructions[i] + ': ' + flattenedInstructions[i+1];
-        i = i+1;
-        pos = pos + 1;
-
-      } 
-      else { 
-        cleanedInstructions[pos] = flattenedInstructions[i];
-        pos = pos + 1;
-      }
-      
-    }
     yloc = 40;
 
 
@@ -122,12 +123,16 @@ export default function App() {
 
   //Function to assign text input to a state variable and trigger the clear borders around any clicked images
   const setInput = () => {
+    if (document.getElementById("input").value.length>0 && document.getElementById("input").value.length<300){
     setTextInput(document.getElementById("input").value);
     clickTextInputRandomize();
     document.getElementById('prevTerm').innerText = 'Most recent search term : ' + document.getElementById("input").value;
     document.getElementById('input').value = '';
     setRandomClicked(false);
     setUploadDetails('');
+  } else {
+    document.getElementById('input').value = '';
+  }
   }
 
   //A function to set the state variables for both recipes and bs64 encoded images
@@ -138,8 +143,8 @@ export default function App() {
 
   //Function to retrieve Recipes via an API call to the FastAPI service which in turn calls the Databricks Serverless Serving endpoint which serves the CLIP model and FAISS index
   const loadRecipes = (index) => {
-
-    fetch('http://127.0.0.1:8000/random_image_index/' + randomize_results[5][index]).then(res => res.json()).then(data => {
+//
+    fetch(backend_url + '/random_image_index/' + randomize_results[5][index]).then(res => res.json()).then(data => {
       assignImagesRecipes(data);
     });
 
@@ -151,7 +156,7 @@ export default function App() {
   }
 
   React.useEffect(() => {
-    fetch('http://127.0.0.1:8000/image_text/' + textinput).then(res => res.json()).then(data => {
+    fetch(backend_url + '/image_text/' + textinput).then(res => res.json()).then(data => {
       assignImagesRecipes(data);
     });
 
@@ -159,7 +164,7 @@ export default function App() {
 
   //This is the new code added to get some christmas specific images when the page is reloaded
   React.useEffect(() => {
-    fetch('http://127.0.0.1:8000/image_text/' + 'turkey').then(res => res.json()).then(data => {
+    fetch(backend_url + '/image_text/' + 'turkey').then(res => res.json()).then(data => {
       assignImagesRecipes(data);
     });
 
@@ -167,7 +172,7 @@ export default function App() {
 
   //Effect hook to populate sample image indices [0,200] and corresponding bs64 images. Each in an array
   React.useEffect(() => {
-    fetch('http://127.0.0.1:8000/random_images').then(res => res.json()).then(data => {
+    fetch(backend_url + '/random_images').then(res => res.json()).then(data => {
       //console.log(data);
       setRandomize_results(data)
       setRandomClicked(false);
@@ -270,7 +275,7 @@ export default function App() {
 
             <div id='5' class="col-md-2 col-xs-2 thumb float-start" data-bs-toggle="tooltip" title="Image Size Limit: 5 MB">
 
-              <Uploader setFiles={setFiles} setUploadDetails={setUploadDetails} setRandomClicked={setRandomClicked}  setRandomClickedDiv={setRandomClickedDiv} setRecipes={setRecipes} setImages_bs64={setImages_bs64} />
+              <Uploader setFiles={setFiles} setUploadDetails={setUploadDetails} setRandomClicked={setRandomClicked}  setRandomClickedDiv={setRandomClickedDiv} setRecipes={setRecipes} setImages_bs64={setImages_bs64} url={backend_url} />
 
 
             </div>
@@ -330,7 +335,15 @@ export default function App() {
                       <Accordion.Item eventKey="0">
                         <Accordion.Header>Instructions</Accordion.Header>
                         <Accordion.Body style={{ backgroundColor: '#EEEDE9' }}>
-                          {recipes[index].Instructions}
+                          {
+                          
+                          recipes[index].Instructions.split("\\n").map(instruction => {
+                            return (
+                              <ul class="my-2">{instruction}</ul>)
+                          })
+                          
+                          }
+                          
                         </Accordion.Body>
                       </Accordion.Item>
                       <div class="float-end ">
