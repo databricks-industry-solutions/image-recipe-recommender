@@ -24,12 +24,12 @@ ___
 
 ___
 
-&copy; 2022 Databricks, Inc. All rights reserved. The source in this notebook is provided subject to the Databricks License [https://databricks.com/db-license-source].  All included or referenced third party libraries are subject to the licenses set forth below.
+&copy; 2022 Databricks, Inc. All rights reserved. The source in this notebook is provided subject to the (Databricks License)[https://databricks.com/db-license-source].  All included or referenced third party libraries are subject to the licenses set forth below.
 
 | library                                | description             | license    | source                                              |
 |----------------------------------------|-------------------------|------------|-----------------------------------------------------|
 |sentence-transformers | Provides an easy method to compute dense vector representations for sentences, paragraphs, and images | Apache 2.0| https://pypi.org/project/sentence-transformers/      |
-| kaggle| Official API for https://www.kaggle.com, accessible using a command line tool implemented in Python | Apache 2.0 | https://pypi.org/project/kaggle/|
+| kaggle| Official API for `https://www.kaggle.com`, accessible using a command line tool implemented in Python | Apache 2.0 | https://pypi.org/project/kaggle/|
 
 To run this accelerator, clone this repo into a Databricks workspace. Attach the RUNME notebook to any cluster running a DBR 11.0 or later runtime, and execute the notebook via Run-All. A multi-step-job describing the accelerator pipeline will be created, and the link will be provided. Execute the multi-step-job to see how the pipeline runs.
 
