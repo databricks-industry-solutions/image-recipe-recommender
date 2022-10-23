@@ -22,6 +22,7 @@ export default function App() {
   //Tracking the randominzed clicked div
   const [randomClickedDiv, setRandomClickedDiv] = useState({});
 
+  //Declare this as a variable
   const backend_url = <your-backend-URL>;
 
   //A function to clean borders of randomly selected images
