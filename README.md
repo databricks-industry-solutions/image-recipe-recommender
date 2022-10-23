@@ -20,7 +20,7 @@ ___
 ___
 
 
-IMAGE TO REFERENCE ARCHITECTURE
+<img src=https://brysmiwasb.blob.core.windows.net/demos/images/recipes_simplearch.png>
 
 ___
 
