@@ -1,4 +1,4 @@
-To run this locally:
+### To run this locally:
 Clone the repository to your machine/ server.
 
 Using the terminal/ command line, navigate to the root directory i.e. frontend, and run the following command:
@@ -9,7 +9,7 @@ npm start
 
 The front end will start running and can be accessed on localhost:3000.
 
-Deploying to Github Pages: 
+### Deploying to Github Pages: 
 
 Follow the instructions given in the readme of the original repo detailing the process: https://github.com/gitname/react-gh-pages
 Just to recap what's mentioned in the avove readme:
