@@ -225,7 +225,7 @@ export default function App() {
         <p>
         Welcome to the Databricks Holiday Recipe Finder app.  
           The purpose of this application is to demonstrate how AI-capabilities can be easily integrated with a user interface leveraging Databricks model serving capabilities.  
-          Databricks model serving, also known as the Databricks Serverless Real-Time Interface, allows developers and data scientists to deploy machine learning models to a scalable, 
+          Databricks model serving, also known as the Databricks Serverless Real-Time Inference, allows developers and data scientists to deploy machine learning models to a scalable, 
           easy to manage microservices layer accessible via a REST API.  This functionality is intended to make the operationalization of machine learning models easier, allowing 
           organizations to deliver new experiences and capabilities to their customers.
         </p>
@@ -233,7 +233,7 @@ export default function App() {
         <p>
         With this particular application, you can search the Epicurious Food Ingredients and Recipes dataset using either image-based or text-based semantic search. 
           Click on any of the randomly selected images to find recipes associated with similar images or upload an image of your own.  
-          Use the search box below the images to perform a separate search based on keywords and phrases.
+          Use the search box below the images to search the images with text, either keywords or phrases.
         </p>
       </Alert>
 
