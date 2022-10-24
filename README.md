@@ -9,7 +9,7 @@ Developers are increasingly looking to integrate Machine Learning and AI capabil
 As illustrated in the architectural diagram below, the application consists of a simple React JavaScript UI coupled to a model deployed through Databricks model serving. The UI code is available in the following repo folders:
 
 * **frontend**: the Reach JS code for the UI
-* **backend**: the sample images used to populate the random samples displayed in the UI and the FastAPI service for the backend logic (several wrapper functions for model inference calls to the Databricks Serverless Real-Time Inference model endpoint)
+* **backend**: the sample images used to populate the random samples displayed in the UI and the FastAPI service for the backend logic (including wrapper functions for model inference calls to the Databricks Serverless Real-Time Inference model endpoint)
 
 The Databricks components are available as three notebooks in the **model_and_data_prep** folder.  These notebooks process the images and recipe data associated with the application and package these assets with the model for deployment to Databricks model serving.
 </p>
