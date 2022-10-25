@@ -15,10 +15,6 @@ The Databricks components are available as three notebooks in the **model_and_da
 </p>
 
 ___
-<john.doe@databricks.com>
-
-___
-
 
 <img src=https://brysmiwasb.blob.core.windows.net/demos/images/recipes_simplearch.png width=600>
 
