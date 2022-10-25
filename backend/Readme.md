@@ -5,7 +5,7 @@
 Install Docker Desktop on your machine
 
 Download the files of this repo to your local environment cd into the root directory i.e. backend.
-Then run the two followong commands at the terminal
+Then run the following two commands at the terminal
 
 docker build -t myimage .
 
