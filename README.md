@@ -11,6 +11,8 @@ As illustrated in the architectural diagram below, the application consists of a
 * **frontend**: the Reach JS code for the UI
 * **backend**: the sample images used to populate the random samples displayed in the UI and the FastAPI service for the backend logic (including wrapper functions for model inference calls to the Databricks Serverless Real-Time Inference model endpoint)
 
+The model employed here is CLIP (specifically openai/clip-vit-base-patch32 from the HuggingFace Hub). The way the model and the index is employed in this example allows similarity search over an index of image embeddings either using text or image inputs. 
+
 The Databricks components are available as three notebooks in the **model_and_data_prep** folder.  These notebooks process the images and recipe data associated with the application and package these assets with the model for deployment to Databricks model serving.
 </p>
 
