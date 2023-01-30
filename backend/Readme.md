@@ -17,4 +17,4 @@ Then test out the API and/or build an application on it/ integrate with the  rea
 
 ### To Deploy this to Azure App Service
 
-Detailed steps for deploying on azure app service is given here: https://learn.microsoft.com/en-us/training/modules/deploy-run-container-app-service/
+Detailed steps for deploying on azure app service is given here: https://learn.microsoft.com/en-us/training/modules/deploy-run-container-app-service/ and here: https://code.visualstudio.com/docs/containers/app-service
